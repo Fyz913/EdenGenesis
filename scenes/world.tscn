@@ -1,0 +1,244 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/world/world.gd" id="2_world"]
+[ext_resource type="Script" path="res://scripts/dialogue_ui.gd" id="3_dialogue"]
+[ext_resource type="Script" path="res://scripts/world/world_time.gd" id="4_time"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="5_hud"]
+[ext_resource type="Script" path="res://scripts/event_toast.gd" id="6_toast"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_interact"]
+radius = 3.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(200, 200)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grass"]
+albedo_color = Color(0.3, 0.6, 0.3, 1)
+roughness = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
+size = Vector3(200, 2, 200)
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.5, 0.7, 0.95, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.7, 0.75, 0.8, 1)
+ambient_light_energy = 1.0
+tonemap_mode = 2
+tone_map_exposure = 1.05
+fog_enabled = true
+fog_light_color = Color(0.78, 0.85, 0.93, 1)
+fog_density = 0.007
+fog_sky_affect = 0.6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dialogue"]
+bg_color = Color(0.1, 0.1, 0.1, 0.85)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 16
+content_margin_right = 16
+content_margin_top = 12
+content_margin_bottom = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldTime" type="Node" parent="."]
+script = ExtResource("4_time")
+
+[node name="World" type="Node3D" parent="."]
+script = ExtResource("2_world")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+position = Vector3(0, -1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("PlaneMesh_ground")
+surface_material_override/0 = SubResource("StandardMaterial3D_grass")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+position = Vector3(0, 1, 0)
+shape = SubResource("BoxShape3D_ground")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+position = Vector3(0, 2, 12)
+script = ExtResource("1_player")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+position = Vector3(0, 1.5, 0)
+fov = 75.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="InteractArea" type="Area3D" parent="Player"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/InteractArea"]
+position = Vector3(0, 1.0, 0)
+shape = SubResource("SphereShape3D_interact")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 20, 0)
+light_energy = 1.25
+shadow_enabled = true
+directional_shadow_max_distance = 140.0
+shadow_blur = 4.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="DialogueLayer" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_dialogue")
+
+[node name="DialoguePanel" type="PanelContainer" parent="DialogueLayer"]
+anchors_preset = 12
+anchor_right = 1.0
+offset_top = -220.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dialogue")
+
+[node name="MarginContainer" type="MarginContainer" parent="DialogueLayer/DialoguePanel"]
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="DialogueLayer/DialoguePanel/MarginContainer"]
+
+[node name="NpcNameLabel" type="Label" parent="DialogueLayer/DialoguePanel/MarginContainer/VBox"]
+unique_name_in_owner = true
+text = "NPC"
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 22
+
+[node name="MessageHistory" type="RichTextLabel" parent="DialogueLayer/DialoguePanel/MarginContainer/VBox"]
+unique_name_in_owner = true
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_following = true
+theme_override_font_sizes/normal_font_size = 18
+
+[node name="InputField" type="LineEdit" parent="DialogueLayer/DialoguePanel/MarginContainer/VBox"]
+unique_name_in_owner = true
+placeholder_text = "输入消息，回车发送，ESC 结束对话..."
+theme_override_font_sizes/font_size = 18
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("5_hud")
+
+[node name="TopBar" type="PanelContainer" parent="HUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 36.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
+
+[node name="HBox" type="HBoxContainer" parent="HUD/TopBar"]
+
+[node name="Title" type="Label" parent="HUD/TopBar/HBox"]
+text = "Eden Genesis"
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+
+[node name="Spacer" type="Control" parent="HUD/TopBar/HBox"]
+size_flags_horizontal = 3
+
+[node name="Residents" type="Label" parent="HUD/TopBar/HBox"]
+text = "居民: 5"
+theme_override_font_sizes/font_size = 16
+
+[node name="TimeLabel" type="Label" parent="HUD/TopBar/HBox"]
+unique_name_in_owner = true
+text = "时间: 08:00"
+theme_override_font_sizes/font_size = 16
+
+[node name="Weather" type="Label" parent="HUD/TopBar/HBox"]
+text = "  天气: 晴天"
+theme_override_font_sizes/font_size = 16
+
+[node name="CivLabel" type="Label" parent="HUD/TopBar/HBox"]
+unique_name_in_owner = true
+text = "Eden"
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+
+[node name="EventToast" type="CanvasLayer" parent="."]
+script = ExtResource("6_toast")
+
+[node name="ToastLabel" type="Label" parent="EventToast"]
+unique_name_in_owner = true
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 80.0
+offset_right = 300.0
+offset_bottom = 130.0
+grow_horizontal = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.95, 0.7, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 26
+text = ""
+
+[node name="SidePanel" type="PanelContainer" parent="HUD"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = 50.0
+offset_right = -10.0
+offset_bottom = -50.0
+grow_horizontal = 0
+grow_vertical = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD/SidePanel"]
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SidePanelRT" type="RichTextLabel" parent="HUD/SidePanel/MarginContainer"]
+unique_name_in_owner = true
+bbcode_enabled = true
+scroll_active = true
+scroll_following = true
+theme_override_font_sizes/normal_font_size = 15
+
+[node name="HintLabel" type="Label" parent="HUD"]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -180.0
+offset_top = 52.0
+offset_right = -14.0
+offset_bottom = 76.0
+grow_horizontal = 0
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.7)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "[Tab] 文明面板"

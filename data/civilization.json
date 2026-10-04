@@ -1,0 +1,9 @@
+{
+  "name": "Eden",
+  "population": 6,
+  "technology_level": 1,
+  "settlement": "Eden村",
+  "government": "部落",
+  "culture": ["尊重自然", "探索未知"],
+  "history": ["建立第一个村庄"]
+}

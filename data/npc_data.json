@@ -1,0 +1,10 @@
+{
+  "villagers": [
+    {"name": "阿尔",  "age": 32, "job": "铁匠",   "family": "family_001", "spouse": "莉娜", "children": [], "relationship": {"玩家": 60, "莉娜": 90}},
+    {"name": "莉娜",  "age": 29, "job": "织布工", "family": "family_001", "spouse": "阿尔", "children": [], "relationship": {"玩家": 50, "阿尔": 90}},
+    {"name": "阿花",  "age": 28, "job": "农夫",   "family": null,          "spouse": null,  "children": [], "relationship": {"玩家": 40}},
+    {"name": "老陈",  "age": 45, "job": "渔夫",   "family": null,          "spouse": null,  "children": [], "relationship": {"玩家": 30}},
+    {"name": "小李",  "age": 25, "job": "商人",   "family": null,          "spouse": null,  "children": [], "relationship": {"玩家": 20}},
+    {"name": "王婆",  "age": 60, "job": "面包师", "family": null,          "spouse": null,  "children": [], "relationship": {"玩家": 55}}
+  ]
+}

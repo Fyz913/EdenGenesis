@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_trunk"]
+top_radius = 0.2
+bottom_radius = 0.3
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bark"]
+albedo_color = Color(0.4, 0.25, 0.1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_leaves"]
+radius = 1.1
+height = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leaf"]
+albedo_color = Color(0.1, 0.45, 0.15, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tree"]
+radius = 0.35
+height = 4.0
+
+[node name="Tree" type="StaticBody3D"]
+
+[node name="Trunk" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_trunk")
+surface_material_override/0 = SubResource("StandardMaterial3D_bark")
+
+[node name="Leaves" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.5, 0)
+mesh = SubResource("CapsuleMesh_leaves")
+surface_material_override/0 = SubResource("StandardMaterial3D_leaf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.5, 0)
+shape = SubResource("CapsuleShape3D_tree")

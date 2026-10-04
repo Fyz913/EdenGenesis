@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ecology/animal.gd" id="1_animal"]
+
+[sub_resource type="CapsuleShape3D" id="col"]
+radius = 0.4
+height = 1.0
+
+[sub_resource type="CapsuleMesh" id="body_mesh"]
+radius = 0.35
+height = 0.8
+
+[sub_resource type="StandardMaterial3D" id="body_mat"]
+albedo_color = Color(0.5, 0.35, 0.2, 1)
+
+[node name="Animal" type="CharacterBody3D"]
+script = ExtResource("1_animal")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.6, 0)
+rotation = Vector3(0, 0, 1.5708)
+mesh = SubResource("body_mesh")
+surface_material_override/0 = SubResource("body_mat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.5, 0)
+shape = SubResource("col")

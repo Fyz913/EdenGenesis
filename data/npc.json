@@ -1,0 +1,9 @@
+{
+  "villagers": [
+    {"name": "阿尔", "age": 32, "job": "铁匠", "home": "house_01", "work": "blacksmith"},
+    {"name": "阿花", "age": 28, "job": "农夫", "home": "house_01", "work": "farm"},
+    {"name": "老陈", "age": 45, "job": "渔夫", "home": "house_02", "work": "river"},
+    {"name": "小李", "age": 25, "job": "商人", "home": "house_02", "work": "market"},
+    {"name": "王婆", "age": 60, "job": "面包师", "home": "house_01", "work": "market"}
+  ]
+}
